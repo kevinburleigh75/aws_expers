@@ -10,7 +10,12 @@ end
 
 ec2 = Aws::EC2::Resource.new(region: 'us-west-2')
 
-script = ''
+script = %Q{
+  #!/bin/bash
+
+  touch ~ec2-user/kevin.txt
+}
+
 encoded_script = Base64.encode64(script)
 
 puts "#{Time.now}: creating instance..."
@@ -43,7 +48,7 @@ instance.create_tags(
   {
     tags: [
       { key:   'Name',
-        value: 'MyGroovyInstance' + Kernel::rand(100) },
+        value: "MyGroovyInstance#{Kernel::rand(100)}" },
       { key:   'Group',
         value: 'MyGroovyGroup' }
     ]
