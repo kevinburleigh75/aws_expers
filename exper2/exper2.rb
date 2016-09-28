@@ -18,6 +18,8 @@ script = %Q{
     cd
     git clone https://github.com/kevinburleigh75/aws_expers.git
     cd aws_expers
+    gem install bundler
+    bundler install
     bundle exec ./exper2/the_script.rb
   EOF
 }
