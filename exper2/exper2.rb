@@ -16,7 +16,8 @@ script = %Q{
 
   touch ~ec2-user/user_data_executed.txt
 
-  runuser -l ec2-user -c <<EOF
+  cat ~ec2-user/init.sh <<EOF
+    #!/bin/bash
     cd ~ec2-user
     git clone https://github.com/kevinburleigh75/aws_expers.git
     cd aws_expers
@@ -24,6 +25,9 @@ script = %Q{
     bundler install
     bundle exec ./exper2/the_script.rb
   EOF
+
+  chmod 744 ~ec2-user/init.sh
+  runuser -l ec2-user -c 'cd; ./init.sh'
 }
 
 encoded_script = Base64.encode64(script)
