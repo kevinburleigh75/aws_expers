@@ -27,6 +27,8 @@ script = %Q{
   EOF
 
   chmod 744 ~ec2-user/init.sh
+  chown ec2-user ~ec2-user/init.sh
+
   runuser -l ec2-user -c 'cd; ./init.sh'
 }
 
