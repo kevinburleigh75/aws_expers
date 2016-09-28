@@ -14,14 +14,16 @@ ec2 = Aws::EC2::Resource.new(region: 'us-west-2')
 script = %Q{
   #!/bin/bash
 
-  su - ec2-user -s/bin/bash -c <<EOF
+  touch ~ec2-user/user_data_executed.txt
+
+##  su - ec2-user -s/bin/bash -c <<EOF
     cd
     git clone https://github.com/kevinburleigh75/aws_expers.git
     cd aws_expers
     gem install bundler
     bundler install
     bundle exec ./exper2/the_script.rb
-  EOF
+##  EOF
 }
 
 encoded_script = Base64.encode64(script)
@@ -46,24 +48,24 @@ instance = ec2.create_instances(
   }
 ).first
 
-# Wait for the instance to be created, running, and passed status checks
-puts "#{Time.now}: waiting for instance to pass checks..."
-ec2.client.wait_until(:instance_status_ok, {instance_ids: [instance.id]})
-
-# Name the instance 'MyGroovyInstance' and give it the Group tag 'MyGroovyGroup'
-puts "#{Time.now}: adding tags..."
+# Name the instance and give it a group
+instance_name = "Monitor#{Kernel::rand(100)}"
+puts "#{Time.now}: adding tags to #{instance_name}..."
 instance.create_tags(
   {
     tags: [
       { key:   'Name',
-        value: "Monitor#{Kernel::rand(100)}" },
+        value: instance_name },
       { key:   'Group',
         value: 'Monitors' }
     ]
   }
 )
 
+# Wait for the instance to be created, running, and passed status checks
+puts "#{Time.now}: waiting for instance to pass checks..."
+ec2.client.wait_until(:instance_status_ok, {instance_ids: [instance.id]})
+
 puts "#{Time.now}: some extra info"
-debugger
 puts instance.id
 puts instance.public_ip_address
