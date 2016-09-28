@@ -16,7 +16,7 @@ script = %Q{
 
   touch ~ec2-user/user_data_executed.txt
 
-  cat ~ec2-user/init.sh <<EOF
+  cat > ~ec2-user/init.sh <<EOF
     #!/bin/bash
     cd ~ec2-user
     git clone https://github.com/kevinburleigh75/aws_expers.git
