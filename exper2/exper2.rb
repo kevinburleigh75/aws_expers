@@ -16,14 +16,14 @@ script = %Q{
 
   touch ~ec2-user/user_data_executed.txt
 
-##  su - ec2-user -s/bin/bash -c <<EOF
-    cd
+  runuser -l ec2-user -c <<EOF
+    cd ~ec2-user
     git clone https://github.com/kevinburleigh75/aws_expers.git
     cd aws_expers
     gem install bundler
     bundler install
     bundle exec ./exper2/the_script.rb
-##  EOF
+  EOF
 }
 
 encoded_script = Base64.encode64(script)
