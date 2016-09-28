@@ -12,24 +12,24 @@ end
 ec2 = Aws::EC2::Resource.new(region: 'us-west-2')
 
 script = %Q{
-  #!/bin/bash
+#!/bin/bash
 
-  touch ~ec2-user/user_data_executed.txt
+touch ~ec2-user/user_data_executed.txt
 
-  cat > ~ec2-user/init.sh <<EOF
-    #!/bin/bash
-    cd ~ec2-user
-    git clone https://github.com/kevinburleigh75/aws_expers.git
-    cd aws_expers
-    gem install bundler
-    bundler install
-    bundle exec ./exper2/the_script.rb
-  EOF
+cat > ~ec2-user/init.sh <<EOF
+#!/bin/bash
+cd ~ec2-user
+git clone https://github.com/kevinburleigh75/aws_expers.git
+cd aws_expers
+gem install bundler
+bundler install
+bundle exec ./exper2/the_script.rb
+EOF
 
-  chmod 744 ~ec2-user/init.sh
-  chown ec2-user ~ec2-user/init.sh
+chmod 744 ~ec2-user/init.sh
+chown ec2-user ~ec2-user/init.sh
 
-  runuser -l ec2-user -c 'cd; ./init.sh'
+runuser -l ec2-user -c 'cd; ./init.sh'
 }
 
 encoded_script = Base64.encode64(script)
