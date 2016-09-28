@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'aws-sdk'
+Bundler.require
+
 require 'csv'
 
 CSV.foreach('credentials.csv', headers: :first_row) do |row|
